@@ -2,7 +2,7 @@ from math import asin, cos, pi, sin, sqrt
 import labelbox
 import os
 import argparse
-from typing import Dict, Any, List
+from typing import Dict, List
 from itertools import chain, combinations
 from pathlib import Path
 import os
