@@ -1,7 +1,7 @@
 import os
 import sys
 
-# Script to modify the Satelitte imagery label folder "overlayed_boxes" to a format compatible with MMRotate
+# Script to modify the Satelitte imagery label folder with comma seperated .txtfiles to a format compatible with MMRotate
 
 def format_line(line):
     # Remove index and commas from row
@@ -18,7 +18,7 @@ def process_file(input_file_path, output_folder):
             content = infile.readlines()
 
         # Format each line and write to modified output file
-        output_file_path = os.path.join(output_folder, f"modified_{os.path.basename(input_file_path)}")
+        output_file_path = os.path.join(output_folder, f"{os.path.basename(input_file_path)}")
         with open(output_file_path, 'w') as outfile:
             for line in content:
                 modified_line = format_line(line)
