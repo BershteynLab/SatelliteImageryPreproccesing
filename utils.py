@@ -5,8 +5,8 @@ def format_line(line):
     formatted_row = ' '.join(line.strip().split(',')[1:])
 
     # Add class label and perplexity to each row
-    formatted_row += " grave 0"
-    
+    formatted_row += " grave 0\n"
+
     return formatted_row
 
 def process_file(input_file_path, output_folder):
