@@ -1,12 +1,12 @@
 import os
 
 def format_line(line):
-    # Remove index and commas from row
-    formatted_row = ' '.join(line.split(',')[1:])
+    # Remove index and commas, and line break from row
+    formatted_row = ' '.join(line.strip().split(',')[1:])
 
     # Add class label and perplexity to each row
-    formatted_row += " grave 0\n"
-
+    formatted_row += " grave 0"
+    
     return formatted_row
 
 def process_file(input_file_path, output_folder):
