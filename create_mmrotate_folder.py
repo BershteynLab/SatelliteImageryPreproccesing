@@ -24,7 +24,7 @@ def main():
         os.makedirs(train_folder, exist_ok=True)
         os.makedirs(val_folder, exist_ok=True)
         os.makedirs(image_folder, exist_ok=True)
-        print(f"Ouptut folder created: {output_folder}")
+        print(f"Output folder created: {output_folder}")
 
         # Loop through each file in input folder
         for filename in os.listdir(input_folder):
