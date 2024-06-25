@@ -15,7 +15,6 @@ DEFAULT_PROJECT_ID = drone_project_id
 def get_client():
     return labelbox.Client(api_key = LB_API_KEY)
 
-
 def grab_results(project_id):
     client = get_client()
     project = client.get_project(project_id)
