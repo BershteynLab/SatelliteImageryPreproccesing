@@ -1,4 +1,6 @@
+import copy
 from math import asin, cos, pi, sin, sqrt
+import re
 import labelbox
 import os
 import argparse
@@ -14,7 +16,6 @@ DEFAULT_PROJECT_ID = drone_project_id
 
 def get_client():
     return labelbox.Client(api_key = LB_API_KEY)
-
 
 def grab_results(project_id):
     client = get_client()
@@ -97,14 +98,33 @@ def results_to_DOTA(results):
         result_strings[result["data_row"]["external_id"]] = poly_strings
     return result_strings
 
+def tiled_results_to_fullimage(results):
+    results = copy.deepcopy(results)
+    for i_result in range(len(results)):
+        filename = results[i_result]["data_row"]["external_id"]
+        digit_text = re.compile(r"(_\d_\d)").search( filename ).group().split("_")
+        i_row = int(digit_text[1])
+        i_col = int(digit_text[2])
+
+        for project in results[i_result]["projects"]:
+            for i_label in range(len(results[i_result]["projects"][project]["labels"])):
+                for i_object in range(len(results[i_result]["projects"][project]["labels"][i_label]["annotations"]["objects"])):
+                    for i_point in range(len(results[i_result]["projects"][project]["labels"][i_label]["annotations"]["objects"][i_object]['polygon'])):
+                        results[i_result]["projects"][project]["labels"][i_label]["annotations"]["objects"][i_object]['polygon'][i_point]["x"] += i_col*1000
+                        results[i_result]["projects"][project]["labels"][i_label]["annotations"]["objects"][i_object]['polygon'][i_point]["y"] += i_row*1000
+    return results
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
                         prog='Download Labels',
-                        description='Download labelbox annotations to json')
-    parser.add_argument('-p', '--project_id', default=DEFAULT_PROJECT_ID)
+                        description='Download labelbox annotations to DOTA')
+    parser.add_argument('-p', '--project_id', default=DEFAULT_PROJECT_ID, help=f"Labelbox project ID. \n for example, use {drone_project_id} for drone labels")
     parser.add_argument('-o', '--output_folder', default="./")
+    parser.add_argument('--fullimage_labels', action=argparse.BooleanOptionalAction) 
     args = parser.parse_args()
     results = grab_results(args.project_id)
+    if args.fullimage_labels:
+        results = tiled_results_to_fullimage(results)
     dota_outputs = results_to_DOTA(results)
     output_folder = Path(args.output_folder)
     if not output_folder.exists():
